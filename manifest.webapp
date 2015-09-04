@@ -6,7 +6,7 @@
     "url": "https://github.com/justindarc"
   },
   "customizations": [{
-    "filter": "verticalhome.gaiamobile.org",
+    "filter": ".*",
     "scripts": [
       "main.js"
     ]

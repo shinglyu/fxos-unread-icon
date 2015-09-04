@@ -1,5 +1,9 @@
 const CLOCK_MANIFEST_URL = 'app://clock.gaiamobile.org/manifest.webapp';
 const CLOCK_QUERY_SELECTOR = `.icon[data-identifier="${CLOCK_MANIFEST_URL}"]`;
+const PHONE_MANIFEST_URL = 'app://communications.gaiamobile.org/manifest.webapp-dialer';
+const PHONE_QUERY_SELECTOR = `.icon[data-identifier="${PHONE_MANIFEST_URL}"]`;
+const GALLERY_MANIFEST_URL = 'app://gallery.gaiamobile.org/manifest.webapp';
+const GALLERY_QUERY_SELECTOR = `.icon[data-identifier="${GALLERY_MANIFEST_URL}"]`;
 
 const RADIUS = 150;
 
@@ -10,7 +14,7 @@ const HOUR_HAND_COLOR   = '#eeeeee';
 const MINUTE_HAND_COLOR = '#eeeeee';
 const SECOND_HAND_COLOR = '#00caf2';
 
-const SECOND_HAND_POINTS = [[-1, -RADIUS * 0.8], [1, -RADIUS * 0.8], [1, RADIUS * 0.2], [-1, RADIUS * 0.2]];
+const SECOND_HAND_POINTS = [[-30, -30], [-30, 30], [30, 30], [30, -30]];
 const MINUTE_HAND_POINTS = [[-1, -RADIUS * 0.9], [1, -RADIUS * 0.9], [6, 0], [-6, 0]];
 const HOUR_HAND_POINTS   = [[-3, -RADIUS * 0.7], [3, -RADIUS * 0.7], [6, 0], [-6, 0]];
 
@@ -28,7 +32,8 @@ gradient.addColorStop(1, GRADIENT_END_COLOR);
 var icon;
 
 function initIcon() {
-  if (!(icon = document.querySelector(CLOCK_QUERY_SELECTOR))) {
+  //if (!(icon = document.querySelector(CLOCK_QUERY_SELECTOR))) {
+  if (!(icon = document.querySelector(PHONE_QUERY_SELECTOR))) {
     return;
   }
   
@@ -58,6 +63,61 @@ function drawHand(rotation, points, color) {
   ctx.restore();
 }
 
+function drawUnreadIcon(app_selector, number){
+  //TODO: check if icon exist
+  var icon = document.createElement('div');
+  icon.style.width = "30px"
+  icon.style.height= "30px"
+  icon.style.backgroundColor = "red"
+  document.querySelector(app_selector).appendChild(icon)
+}
+console.log("[UNREAD]I am running in ")
+console.log(window.location)
+console.log("[UNREAD] is in system :", window.location.toString().indexOf('system.gaiamobile.org') > 0) 
+console.log("[UNREAD] is in homescreen:", window.location.toString().indexOf('verticalhome.gaiamobile.org') > 0) 
+if (window.location.toString().indexOf('system.gaiamobile.org') > 0) {
+  window.addEventListener('mozChromeNotificationEvent', function(evt){
+    console.log(evt.detail)
+    console.log(evt.detail.type)
+    console.log(evt.detail.title)
+    var lock = navigator.mozSettings.createLock();
+    //TODO: change this to { "title": count }
+    var result = lock.set({
+        'unreads': evt.detail.title
+    });
+  })
+   
+  result.onsuccess = function () {
+      console.log("[UNREAD]the settings has been changed");
+  }
+   
+  result.onerror = function () {
+      console.log("[UNREAD]An error occure, the settings remain unchanged");
+  }
+  
+}
+
+if (window.location.toString().indexOf('verticalhome.gaiamobile.org') > 0) {
+  setInterval(function() {
+    var lock    = navigator.mozSettings.createLock();
+    var setting = lock.get('unreads');
+
+    setting.onsuccess = function () {
+        console.log('[UNREAD]unreads: ' + setting.result);
+        console.log('[UNREAD]unreads: ' + setting.result.unreads);
+        //TODO: change data structure
+        if (setting.result.unreads == "Device logs saved"){
+          drawUnreadIcon(GALLERY_QUERY_SELECTOR, 1);
+        }
+    }
+
+    setting.onerror = function () {
+        console.warn('[UNREAD]An error occured: ' + setting.error);
+
+    }
+  }, 1000);
+  
+}
 setInterval(function() {
   if (!initIcon()) {
     return;
@@ -68,8 +128,10 @@ setInterval(function() {
   var minute = currentTime.getMinutes();
   var second = currentTime.getSeconds();
 
-  drawBackground();
-  drawHand(Math.PI * 2 / 60 * second, SECOND_HAND_POINTS, SECOND_HAND_COLOR);
-  drawHand(Math.PI * 2 / 60 * minute, MINUTE_HAND_POINTS, MINUTE_HAND_COLOR);
-  drawHand(Math.PI * 2 / 12 * hour, HOUR_HAND_POINTS, HOUR_HAND_COLOR);
+  //drawBackground();
+
+  drawHand(Math.PI * 2 / 60 * second, SECOND_HAND_POINTS, "#ff0000");
+  //drawHand(Math.PI * 2 / 60 * second, SECOND_HAND_POINTS, SECOND_HAND_COLOR);
+  //drawHand(Math.PI * 2 / 60 * minute, MINUTE_HAND_POINTS, MINUTE_HAND_COLOR);
+  //drawHand(Math.PI * 2 / 12 * hour, HOUR_HAND_POINTS, HOUR_HAND_COLOR);
 }, 1000);
