@@ -175,7 +175,11 @@ if (window.location.toString().indexOf('system.gaiamobile.org') > 0) {
   window.addEventListener('mozChromeNotificationEvent', function(evt){
     console.log("[UNREAD] Received notification")
     //TODO: if the title is not on the list, ignore
-    increaseUnreadByOne(notificatinIdToIconUrl(evt.detail.id));
+
+    var iconUrl = notificatinIdToIconUrl(evt.detail.id);
+    if (typeof iconUrl != "undefined") {
+      increaseUnreadByOne(iconUrl);
+    }
     console.log(evt.detail)
     //console.log(evt.detail.type)
     //console.log(evt.detail.title)
@@ -183,7 +187,6 @@ if (window.location.toString().indexOf('system.gaiamobile.org') > 0) {
 }
 
 if (window.location.toString().indexOf('verticalhome.gaiamobile.org') > 0) {
-  //TODO: use navigator.mozSettings.addObserver('wifi.enabled', handleWifi);
   //TODO: if app opened, clean up the unreads
   navigator.mozSettings.addObserver('unreads', function(evt){
     console.log("[UNREAD] Unreads updated")
@@ -206,6 +209,4 @@ if (window.location.toString().indexOf('verticalhome.gaiamobile.org') > 0) {
 
     }
   });
-  setInterval(function() {
-  }, POLLINTV);
 }
