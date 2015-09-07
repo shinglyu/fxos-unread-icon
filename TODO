@@ -1,0 +1,22 @@
+l10n?
+more mappings
+  update => marketplace
+  phone => 
+  sms => 
+  email => no notification
+  calendar?
+  facebook?
+  twitter?
+
+if the title is not in the whitelist, don't do anything
+Draw the icon once at boot 
+change manifest and icon
+cleanup logging
+cleanup settings when install/uninstall
+delete entries that = 0
+unittest 
+support number > 99 (expand the icon size)
+[v] use settings change observer to update icon
+Usage app icon?
+upgrade manifest version
+Only clear the unread after the app is opened for a few seconds
