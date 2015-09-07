@@ -1,9 +1,9 @@
 {
-  "name": "Live Clock Icon",
-  "description": "Add-on for animating the Clock icon on the homescreen",
+  "name": "Unread Icons",
+  "description": "Add unread count on icons on the homescreen",
   "developer": {
-    "name": "Justin D'Arcangelo",
-    "url": "https://github.com/justindarc"
+    "name": "Shing Lyu",
+    "url": "https://shinglyu.github.io/"
   },
   "customizations": [{
     "filter": ".*",
@@ -15,10 +15,8 @@
   "package_path": "package.zip",
   "role": "addon",
   "icons": {
-    "84": "/icons/clock_84.png",
-    "126": "/icons/clock_126.png",
-    "142": "/icons/clock_142.png",
-    "189": "/icons/clock_189.png",
-    "284": "/icons/clock_284.png"
+    "64": "/icons/icon-64.png",
+    "128": "/icons/icon-128.png",
+    "256": "/icons/icon-256.png"
   }
 }
