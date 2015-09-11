@@ -1,0 +1,13 @@
+{
+  "manifest_version": 2,
+  "name": "Unread Icons",
+  "description": "Add unread count on icons on the homescreen",
+  "version": "1.0",
+  "author": "Shing Lyu",
+  "content_scripts": [{
+    "matches": ["app://system.gaiamobile.org/*", "app://verticalhome.gaiamobile.org/*"],
+    "css": [],
+    "js": ["main.js"]
+
+  }]
+}

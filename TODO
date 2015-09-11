@@ -1,16 +1,16 @@
-l10n?
+[v] l10n?
 more mappings
   update => marketplace
-  phone => 
-  sms => 
-  email => no notification
-  calendar?
+  [v] phone => 
+  [v] sms => 
+  [v] email => no notification
+  [v] calendar?
   facebook?
   twitter?
 
-if the title is not in the whitelist, don't do anything
+[v] if the title is not in the whitelist, don't do anything
 Draw the icon once at boot 
-change manifest and icon
+[v] change manifest and icon
 cleanup logging
 cleanup settings when install/uninstall
 delete entries that = 0
