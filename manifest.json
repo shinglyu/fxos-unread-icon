@@ -9,5 +9,8 @@
     "css": [],
     "js": ["main.js"]
 
-  }]
+  }],
+  "icons": {
+    "128": "icons/icon-128.png"
+  }
 }
