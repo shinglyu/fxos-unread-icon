@@ -5,7 +5,7 @@
   "version": "1.0",
   "author": "Shing Lyu",
   "content_scripts": [{
-    "matches": ["app://system.gaiamobile.org/index.html", "app://verticalhome.gaiamobile.org/index.html"],
+    "matches": ["app://system.gaiamobile.org/index.html", "app://verticalhome.gaiamobile.org/index.html*"],
     "css": [],
     "js": ["main.js"]
 

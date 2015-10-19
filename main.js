@@ -1,20 +1,4 @@
-/*
-const CLOCK_MANIFEST_URL = 'app://clock.gaiamobile.org/manifest.webapp';
-const CLOCK_QUERY_SELECTOR = `.icon[data-identifier="${CLOCK_MANIFEST_URL}"]`;
-const PHONE_MANIFEST_URL = 'app://communications.gaiamobile.org/manifest.webapp-dialer';
-const PHONE_QUERY_SELECTOR = `.icon[data-identifier="${PHONE_MANIFEST_URL}"]`;
-const GALLERY_MANIFEST_URL = 'app://gallery.gaiamobile.org/manifest.webapp';
-const GALLERY_QUERY_SELECTOR = `.icon[data-identifier="${GALLERY_MANIFEST_URL}"]`;
-//FIXME: bad selector
-const BZLITE_MANIFEST_URL= 'https://www.bzlite.com/manifest.webapp';
-const BZLITE_QUERY_SELECTOR = `.icon[data-identifier="${GALLERY_MANIFEST_URL}"]`;
-*/
-
-//const POLLINTV = 5000; //ms
-
-//TODO: the dialer icon has a special url. 
 const ActionToAppMapping = {// pattern in notification event id: vertical home icon 
-  //"Missed call": 'app://communications.gaiamobile.org/manifest.webapp-dialer',
   'app://communications.gaiamobile.org/manifest.webapp#notag': 'app://communications.gaiamobile.org/manifest.webapp-dialer',
   'app://sms.gaiamobile.org/manifest.webapp#tag': 'app://sms.gaiamobile.org/manifest.webapp',
   'app://calendar.gaiamobile.org/manifest.webapp#tag:/alarm-display': 'app://calendar.gaiamobile.org/manifest.webapp',
@@ -151,7 +135,7 @@ console.log("[UNREAD]I am running in ")
 console.log(window.location)
 console.log("[UNREAD] is in system :", window.location.toString().indexOf('system.gaiamobile.org') > 0) 
 console.log("[UNREAD] is in homescreen:", window.location.toString().indexOf('verticalhome.gaiamobile.org') > 0) 
-if (window.location.toString().indexOf('system.gaiamobile.org') > 0) {
+if (window.location.toString() === 'app://system.gaiamobile.org/index.html') {
   window.addEventListener('appopened', function(evt){
     console.log("[UNREAD] App opened: " + evt.detail.manifestURL)
     console.log(evt.type)
@@ -165,13 +149,7 @@ if (window.location.toString().indexOf('system.gaiamobile.org') > 0) {
     }
     setUnreadToNum(evt.detail.manifestURL, 0)
   });
-  /*
-  window.addEventListener('attentionopened', function(evt){
-    console.log(evt.type)
-    console.log(evt.detail)
-    console.log(evt.detail.type)
-  }
-  */
+
   window.addEventListener('mozChromeNotificationEvent', function(evt){
     console.log("[UNREAD] Received notification")
     //TODO: if the title is not on the list, ignore
@@ -181,32 +159,34 @@ if (window.location.toString().indexOf('system.gaiamobile.org') > 0) {
       increaseUnreadByOne(iconUrl);
     }
     console.log(evt.detail)
-    //console.log(evt.detail.type)
-    //console.log(evt.detail.title)
   })
 }
 
-if (window.location.toString().indexOf('verticalhome.gaiamobile.org') > 0) {
-  //TODO: if app opened, clean up the unreads
-  navigator.mozSettings.addObserver('unreads', function(evt){
-    console.log("[UNREAD] Unreads updated")
-    console.log(evt)
-    var lock    = navigator.mozSettings.createLock();
-    var setting = lock.get('unreads');
+function refreshAllHomesceenIcons(evt){
+  var lock    = navigator.mozSettings.createLock();
+  var setting = lock.get('unreads');
 
-    setting.onsuccess = function () {
-        //console.log('[UNREAD]unreads: ' + setting.result);
-        //console.log('[UNREAD]unreads: ' + setting.result.unreads);
-        for (appUrl in setting.result.unreads){
-          console.log("[UNREAD] ", "icon to be drawn ", appUrl)
-          console.log("[UNREAD] ", "icon count to be drawn ", setting.result.unreads[appUrl])
-          drawUnreadIcon(appUrlToQuerySelector(appUrl), setting.result.unreads[appUrl]);
-        }
+  setting.onsuccess = function () {
+    for (appUrl in setting.result.unreads){
+      console.log("[UNREAD] ", "icon to be drawn ", appUrl)
+      console.log("[UNREAD] ", "icon count to be drawn ", setting.result.unreads[appUrl])
+      drawUnreadIcon(appUrlToQuerySelector(appUrl), setting.result.unreads[appUrl]);
     }
+  }
 
-    setting.onerror = function () {
-        console.warn('[UNREAD]An error occured: ' + setting.error);
-
-    }
-  });
+  setting.onerror = function () {
+    console.warn('[UNREAD]An error occured: ' + setting.error);
+  }
 }
+
+//Use indexOf because the verticalhome will have a ID suffix:
+//e.g app://verticalhome.gaiamobile.org/index.html#1234356789
+//I'm not sure about the format of that ID, so don't know how to write a RegEx
+if (window.location.toString().indexOf('app://verticalhome.gaiamobile.org/index.html') == 0) {
+  window.navigator.mozSettings.addObserver('unreads', refreshAllHomesceenIcons);
+
+  // If the addObserver breaks, use polling
+  // window.setInterval(refreshAllHomescreenIcons, 10000);
+}
+
+refreshAllHomesceenIcons() //draw once when boot
