@@ -1,4 +1,15 @@
-fxos-animated-clock
-===================
+Firefox OS Unread Icon
+=========================
+Adds unread messages count on Homescreen app icons.
 
-Add-on for animating the Clock icon on the homescreen
+Currently works in 
+* Dialer
+* Messages
+* Calendar
+* E-mail
+* Gallery (screenshots)
+* Bugzilla Lite (captured logs)
+
+Feedbacks and pull requests are welcome!
+
+
